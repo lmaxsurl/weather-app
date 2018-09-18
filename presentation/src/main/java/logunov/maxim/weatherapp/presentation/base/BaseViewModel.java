@@ -38,4 +38,20 @@ public abstract class BaseViewModel<R extends BaseRouter> extends ViewModel {
             compositeDisposable.clear();
     }
 
+    public void onStart(){
+
+    }
+
+    public void onStop(){
+
+    }
+
+    public void onResume(){
+
+    }
+
+    public void onPause(){
+
+    }
+
 }

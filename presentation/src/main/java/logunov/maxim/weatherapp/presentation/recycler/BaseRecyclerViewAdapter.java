@@ -9,7 +9,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import logunov.maxim.domain.DomainModel;
+import logunov.maxim.domain.entity.DomainModel;
 
 public abstract class BaseRecyclerViewAdapter<
         Entity extends DomainModel,

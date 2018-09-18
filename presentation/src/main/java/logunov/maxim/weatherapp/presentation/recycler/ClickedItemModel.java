@@ -1,6 +1,6 @@
 package logunov.maxim.weatherapp.presentation.recycler;
 
-import logunov.maxim.domain.DomainModel;
+import logunov.maxim.domain.entity.DomainModel;
 
 public class ClickedItemModel<Entity extends DomainModel> {
     private Entity entity;
