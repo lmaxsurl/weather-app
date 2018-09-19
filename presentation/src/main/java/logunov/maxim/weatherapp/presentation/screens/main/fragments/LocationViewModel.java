@@ -17,6 +17,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import logunov.maxim.domain.usecases.GetLocationUseCase;
 import logunov.maxim.domain.usecases.GetReverseGeocodeUseCase;
+import logunov.maxim.domain.usecases.GetWeatherUseCase;
 import logunov.maxim.weatherapp.app.App;
 import logunov.maxim.weatherapp.presentation.base.BaseViewModel;
 import logunov.maxim.weatherapp.presentation.screens.main.MainActivityRouter;
@@ -29,12 +30,16 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
     @Inject
     public GetReverseGeocodeUseCase getReverseGeocodeUseCase;
 
+    @Inject
+    public GetWeatherUseCase getWeatherUseCase;
+
     private Double latitude = 0.0;
     private Double longitude = 0.0;
     private String postalCode;
+    private String countryCode;
     public ObservableField<String> latlong = new ObservableField<>("Location is loading...");
     public ObservableField<String> address = new ObservableField<>("Address is loading...");
-    public ObservableField<String> weather = new ObservableField<>("weather");
+    public ObservableField<String> weather = new ObservableField<>("Click top button");
 
     public LocationViewModel() {
         getData();
@@ -84,6 +89,7 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
                                 + ", "
                                 + addresses.get(0).getCountryName());
                         postalCode = addresses.get(0).getPostalCode();
+                        countryCode = addresses.get(0).getCountryCode();
                     }
 
                     @Override
@@ -104,6 +110,29 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
     }
 
     public void getWeather(){
+        weather.set("Weather is loading...");
+        getWeatherUseCase
+                .getWeather(postalCode, countryCode)
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        getCompositeDisposable().add(d);
+                    }
 
+                    @Override
+                    public void onNext(String s) {
+                        weather.set(s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        weather.set(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

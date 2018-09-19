@@ -15,9 +15,8 @@ import logunov.maxim.weatherapp.presentation.screens.main.fragments.LocationFrag
 
 public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
 
-    private LocationFragment locationFragment = new LocationFragment();
-    private HistoryFragment historyFragment = new HistoryFragment();
-    private FragmentManager fragmentManager;
+    private final LocationFragment locationFragment = new LocationFragment();
+    private final HistoryFragment historyFragment = new HistoryFragment();
 
     public BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -25,10 +24,10 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.navigation_home:
-                            showFragment(locationFragment);
+                            router.showFragment(locationFragment);
                             return true;
                         case R.id.navigation_history:
-                            showFragment(historyFragment);
+                            router.showFragment(historyFragment);
                             return true;
                     }
                     return false;
@@ -36,8 +35,7 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
             };
 
     public MainActivityViewModel() {
-        locationFragment.setRouter(router);
-        historyFragment.setRouter(router);
+
     }
 
     @Override
@@ -45,21 +43,12 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
         App.getAppComponent().runInject(this);
     }
 
-    public void setFragmentManager(FragmentManager fragmentManager){
-        this.fragmentManager = fragmentManager;
-        if(fragmentManager.getPrimaryNavigationFragment() == null){
-            showFragment(locationFragment);
-        }
-    }
-
     public void getData(){
         locationFragment.getData();
     }
 
-    private void showFragment(Fragment fragment){
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.commit();
+    public void showLocationFragment(){
+        router.showFragment(locationFragment);
     }
 
 }

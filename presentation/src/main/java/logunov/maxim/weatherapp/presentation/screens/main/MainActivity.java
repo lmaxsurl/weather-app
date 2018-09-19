@@ -3,30 +3,17 @@ package logunov.maxim.weatherapp.presentation.screens.main;
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import logunov.maxim.weatherapp.R;
 import logunov.maxim.weatherapp.databinding.ActivityMainBinding;
 import logunov.maxim.weatherapp.presentation.base.BaseMvvmActivity;
-import logunov.maxim.weatherapp.presentation.base.BaseRouter;
-import logunov.maxim.weatherapp.presentation.base.BaseViewModel;
 
 public class MainActivity extends BaseMvvmActivity<
         MainActivityViewModel,
@@ -57,25 +44,32 @@ public class MainActivity extends BaseMvvmActivity<
     private void init() {
         binding.navigation
                 .setOnNavigationItemSelectedListener(viewModel.onNavigationItemSelectedListener);
-        viewModel.setFragmentManager(getSupportFragmentManager());
+        checkPermissions();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getSupportFragmentManager().getPrimaryNavigationFragment() == null)
+            viewModel.showLocationFragment();
+    }
+
+    private void checkPermissions() {
         RxPermissions rxPermissions = new RxPermissions(this);
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED){
+                        != PackageManager.PERMISSION_GRANTED) {
             rxPermissions
                     .request(Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION)
                     .subscribe(new Consumer<Boolean>() {
                         @Override
-                        public void accept(Boolean aBoolean)  {
+                        public void accept(Boolean aBoolean) {
                             viewModel.getData();
                             Toast.makeText(MainActivity.this, "DONE!", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
-
 }

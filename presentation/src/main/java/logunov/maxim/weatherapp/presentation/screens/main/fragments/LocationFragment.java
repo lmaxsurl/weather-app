@@ -4,8 +4,10 @@ import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -31,12 +33,8 @@ public class LocationFragment extends BaseMvvmFragment<
         return R.layout.location_fragment;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     public void getData(){
         viewModel.getData();
     }
+
 }

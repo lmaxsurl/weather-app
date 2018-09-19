@@ -6,7 +6,9 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import logunov.maxim.domain.entity.WeatherRequest;
 
-public interface WeatherRequestRepository {
+public interface WeatherRepository {
+
+    Observable<String> getWeather(String postalCode, String countryCode);
 
     Observable<List<WeatherRequest>> getRequests();
 

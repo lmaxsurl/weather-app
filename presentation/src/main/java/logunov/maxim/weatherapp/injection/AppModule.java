@@ -34,16 +34,4 @@ public class AppModule {
         return uiThread;
     }
 
-    @Provides
-    @Singleton
-    public LocationService provideLocationService(Context context){
-        return new LocationService(context);
-    }
-
-    @Provides
-    @Singleton
-    public LocationRepository provideLocationRepository(LocationService locationService){
-        return new LocationRepositoryImpl(locationService);
-    }
-
 }
