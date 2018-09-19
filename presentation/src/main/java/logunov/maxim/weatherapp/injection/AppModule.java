@@ -7,7 +7,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import logunov.maxim.device.location.LocationService;
+import logunov.maxim.device.repositories.LocationRepositoryImpl;
 import logunov.maxim.domain.executors.PostExecutionThread;
+import logunov.maxim.domain.repositories.LocationRepository;
 import logunov.maxim.weatherapp.executor.UIThread;
 
 @Module
@@ -27,8 +30,20 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static PostExecutionThread provideUIThread(UIThread uiThread){
+    public PostExecutionThread provideUIThread(UIThread uiThread){
         return uiThread;
+    }
+
+    @Provides
+    @Singleton
+    public LocationService provideLocationService(Context context){
+        return new LocationService(context);
+    }
+
+    @Provides
+    @Singleton
+    public LocationRepository provideLocationRepository(LocationService locationService){
+        return new LocationRepositoryImpl(locationService);
     }
 
 }

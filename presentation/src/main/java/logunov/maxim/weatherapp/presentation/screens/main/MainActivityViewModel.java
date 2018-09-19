@@ -40,13 +40,20 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
         historyFragment.setRouter(router);
     }
 
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
-    }
-
     @Override
     protected void runInject() {
         App.getAppComponent().runInject(this);
+    }
+
+    public void setFragmentManager(FragmentManager fragmentManager){
+        this.fragmentManager = fragmentManager;
+        if(fragmentManager.getPrimaryNavigationFragment() == null){
+            showFragment(locationFragment);
+        }
+    }
+
+    public void getData(){
+        locationFragment.getData();
     }
 
     private void showFragment(Fragment fragment){
@@ -55,9 +62,4 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
         transaction.commit();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        showFragment(locationFragment);
-    }
 }

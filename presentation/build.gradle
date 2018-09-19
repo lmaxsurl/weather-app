@@ -42,6 +42,7 @@ dependencies {
 
     //Rx
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.github.tbruyelle:rxpermissions:$rxPermissionsVersion"
 
     // Arch
     implementation "android.arch.lifecycle:extensions:$archVersion"
@@ -55,4 +56,5 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     implementation project(path: ':data')
+    implementation project(path: ':device')
 }

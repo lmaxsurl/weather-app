@@ -10,6 +10,7 @@ android {
         versionName "1.0"
     }
 
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,6 +21,13 @@ android {
 }
 
 dependencies {
-
     api project(path: ':domain')
+
+    //Location
+    implementation "pl.charmas.android:android-reactive-location2:$reactiveLocationVersion"
+    implementation "com.google.android.gms:play-services-location:$gsmVersion"
+    implementation "com.google.android.gms:play-services-places:$gsmVersion"
+
+    //Inject
+    implementation "javax.inject:javax.inject:$javaInjectVersion"
 }

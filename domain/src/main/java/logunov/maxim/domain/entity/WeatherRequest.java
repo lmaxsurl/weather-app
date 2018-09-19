@@ -1,7 +1,10 @@
 package logunov.maxim.domain.entity;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
+import java.util.Locale;
 
 public class WeatherRequest implements DomainModel {
 
@@ -19,30 +22,13 @@ public class WeatherRequest implements DomainModel {
         this.date = date;
     }
 
-
-    public int getLatitude() {
-        return latitude;
-    }
-
-    public int getLongitude() {
-        return longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     public String getWeather() {
         return weather;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     @Override
     public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm.ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         return dateFormat.format(date) +
                 '\n' +
                 address +
@@ -52,4 +38,6 @@ public class WeatherRequest implements DomainModel {
                 longitude +
                 ')';
     }
+
+
 }

@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@{viewModel.latitude + ',' + viewModel.longitude}"
+            android:text="@{viewModel.latlong}"
             android:textSize="18sp" />
 
         <TextView

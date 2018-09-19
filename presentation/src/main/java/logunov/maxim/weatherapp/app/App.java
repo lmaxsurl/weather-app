@@ -5,6 +5,7 @@ import android.app.Application;
 import com.squareup.leakcanary.LeakCanary;
 
 import logunov.maxim.weatherapp.injection.AppComponent;
+import logunov.maxim.weatherapp.injection.AppModule;
 import logunov.maxim.weatherapp.injection.DaggerAppComponent;
 
 public class App extends Application {
@@ -20,6 +21,7 @@ public class App extends Application {
         super.onCreate();
         appComponent = DaggerAppComponent
                 .builder()
+                .appModule(new AppModule(this))
                 .build();
         if(LeakCanary.isInAnalyzerProcess(this)){
             return;

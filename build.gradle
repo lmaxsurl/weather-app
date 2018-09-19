@@ -19,6 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -48,6 +49,12 @@ ext{
     //Rx
     rxJavaVersion = '2.1.16'
     rxAndroidVersion = '2.0.2'
+    rxPermissionsVersion = '0.10.2'
+
+    //Location
+    reactiveLocationVersion = '2.1'
+    gsmVersion = '15.0.1'
+
 
     //Arch
     archVersion = '1.1.1'

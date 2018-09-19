@@ -5,6 +5,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -28,7 +29,7 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
         App.getAppComponent().runInject(this);
     }
 
-    public void getData() {
+    private void getData() {
         List<WeatherRequest> data = new ArrayList<>();
         data.add(new WeatherRequest(53, 24, "Minsk", "+24", new Date()));
         data.add(new WeatherRequest(25, 17, "NY", "+24", new Date()));
