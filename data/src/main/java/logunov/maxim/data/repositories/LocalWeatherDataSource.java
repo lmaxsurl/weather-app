@@ -29,4 +29,11 @@ public class LocalWeatherDataSource implements WeatherDataSource {
     public void addRequest(WeatherRequest request) {
         weatherDAO.insert(request);
     }
+
+    @Override
+    public void deleteRequest(WeatherRequest request) {
+        weatherDAO.delete(request);
+    }
+
+
 }

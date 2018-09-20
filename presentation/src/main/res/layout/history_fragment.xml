@@ -8,14 +8,17 @@
             type="logunov.maxim.weatherapp.presentation.screens.main.fragments.HistoryViewModel" />
     </data>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/history_rv"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:animateLayoutChanges="true">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/history_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"/>
+    </FrameLayout>
 
 
 </layout>

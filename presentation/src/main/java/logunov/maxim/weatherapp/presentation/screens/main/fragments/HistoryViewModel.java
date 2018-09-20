@@ -1,5 +1,7 @@
 package logunov.maxim.weatherapp.presentation.screens.main.fragments;
 
+import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -11,8 +13,10 @@ import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import logunov.maxim.domain.entity.Weather;
 import logunov.maxim.domain.entity.WeatherRequest;
+import logunov.maxim.domain.usecases.DeleteRequestUseCase;
 import logunov.maxim.domain.usecases.GetRequestsUseCase;
 import logunov.maxim.domain.usecases.InsertRequestUseCase;
 import logunov.maxim.weatherapp.app.App;
@@ -26,13 +30,17 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
     public RequestItemAdapter adapter = new RequestItemAdapter();
 
     @Inject
-    GetRequestsUseCase getRequestsUseCase;
+    public GetRequestsUseCase getRequestsUseCase;
 
     @Inject
-    InsertRequestUseCase insertRequestUseCase;
+    public InsertRequestUseCase insertRequestUseCase;
+
+    @Inject
+    public DeleteRequestUseCase deleteRequestUseCase;
 
     public HistoryViewModel() {
         getData();
+        observeClicks();
     }
 
     @Override
@@ -40,8 +48,30 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
         App.getAppComponent().runInject(this);
     }
 
-    private void getData() {
+    private void observeClicks() {
+        getCompositeDisposable()
+                .add(adapter
+                        .observeItemClick()
+                        .subscribe(new Consumer<ClickedItemModel>() {
+                            @Override
+                            public void accept(ClickedItemModel clickedItemModel) {
+                                WeatherRequest weatherRequest =
+                                        (WeatherRequest) clickedItemModel.getEntity();
+                                router.showDialog(weatherRequest.getWeather());
+                            }
+                        }));
+        getCompositeDisposable()
+                .add(adapter
+                        .observeLongItemClick()
+                        .subscribe(new Consumer<ClickedItemModel>() {
+                            @Override
+                            public void accept(ClickedItemModel clickedItemModel) {
+                                router.showDeleteDialog((WeatherRequest) clickedItemModel.getEntity());
+                            }
+                        }));
+    }
 
+    private void getData() {
         getRequestsUseCase
                 .getRequests()
                 .subscribe(new Observer<List<WeatherRequest>>() {
@@ -68,4 +98,10 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
                 });
 
     }
+
+    public void deleteRequest(WeatherRequest request){
+        deleteRequestUseCase.delete(request);
+        adapter.removeItem(request);
+    }
+
 }

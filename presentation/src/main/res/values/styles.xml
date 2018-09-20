@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTextView">
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textColor">@color/appTextColor</item>
+        <item name="android:background">@color/backgroundColor</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
 </resources>

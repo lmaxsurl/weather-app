@@ -10,10 +10,12 @@ import android.view.View;
 
 import java.util.Locale;
 
+import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.weatherapp.R;
 import logunov.maxim.weatherapp.databinding.HistoryFragmentBinding;
 import logunov.maxim.weatherapp.presentation.base.BaseMvvmFragment;
 import logunov.maxim.weatherapp.presentation.screens.main.MainActivityRouter;
+import logunov.maxim.weatherapp.presentation.screens.main.recycler.SimpleDividerItemDecoration;
 
 public class HistoryFragment extends BaseMvvmFragment<
         HistoryViewModel,
@@ -33,8 +35,22 @@ public class HistoryFragment extends BaseMvvmFragment<
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        init();
+    }
+
+    private void init() {
+        initRecycler();
+    }
+
+    private void initRecycler() {
         binding.historyRv.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.historyRv.setAdapter(viewModel.adapter);
         binding.historyRv.setHasFixedSize(true);
+        binding.historyRv.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
     }
+
+    public void deleteRequest(WeatherRequest request){
+        viewModel.deleteRequest(request);
+    }
+
 }

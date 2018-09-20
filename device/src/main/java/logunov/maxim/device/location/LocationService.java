@@ -26,7 +26,7 @@ public class LocationService {
     private LocationRequest request;
     private Context context;
     private final long INTERVAL = 300000;
-    private final int MAX_RESULTS = 1;
+    private final int MAX_RESULTS = 10;
 
     @Inject
     public LocationService(Context context) {

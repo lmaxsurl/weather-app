@@ -2,11 +2,12 @@ package logunov.maxim.weatherapp.presentation.screens.main;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
+import logunov.maxim.domain.entity.WeatherRequest;
+import logunov.maxim.domain.usecases.DeleteRequestUseCase;
 import logunov.maxim.weatherapp.R;
 import logunov.maxim.weatherapp.app.App;
 import logunov.maxim.weatherapp.presentation.base.BaseViewModel;
@@ -24,18 +25,21 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.navigation_home:
-                            router.showFragment(locationFragment);
+                            router.replaceFragment(locationFragment);
                             return true;
                         case R.id.navigation_history:
-                            router.showFragment(historyFragment);
+                            router.replaceFragment(historyFragment);
                             return true;
                     }
                     return false;
                 }
             };
 
-    public MainActivityViewModel() {
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        locationFragment.setRouter(router);
+        historyFragment.setRouter(router);
     }
 
     @Override
@@ -43,12 +47,15 @@ public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
         App.getAppComponent().runInject(this);
     }
 
-    public void getData(){
+    public void getData() {
         locationFragment.getData();
     }
 
-    public void showLocationFragment(){
-        router.showFragment(locationFragment);
+    public void showLocationFragment() {
+        router.replaceFragment(locationFragment);
     }
 
+    public void deleteRequest(WeatherRequest request){
+        historyFragment.deleteRequest(request);
+    }
 }

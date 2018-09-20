@@ -2,6 +2,7 @@ package logunov.maxim.weatherapp.presentation.screens.main.fragments;
 
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.location.Address;
 import android.location.Location;
@@ -49,7 +50,7 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
     public ObservableField<String> latlong = new ObservableField<>("Location is loading...");
     public ObservableField<String> address = new ObservableField<>("Address is loading...");
     public ObservableField<String> weather = new ObservableField<>("Click on the top button to see the weather");
-
+    public ObservableBoolean clickEnable = new ObservableBoolean(false);
 
     public LocationViewModel() {
         getData();
@@ -61,6 +62,7 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
     }
 
     public void getData() {
+        clickEnable.set(false);
         getLocationUseCase
                 .getLocation()
                 .subscribe(new Observer<Location>() {
@@ -71,17 +73,15 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
 
                     @Override
                     public void onNext(Location location) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        latlong.set(latitude + " , " + longitude);
+                        setLocation(location);
                         getReverseGeocode();
+                        getWeather();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         latlong.set(e.getLocalizedMessage());
                         address.set(e.getLocalizedMessage());
-
                     }
 
                     @Override
@@ -89,6 +89,12 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
 
                     }
                 });
+    }
+
+    private void setLocation(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        latlong.set(latitude + " , " + longitude);
     }
 
     private void getReverseGeocode() {
@@ -102,15 +108,18 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
 
                     @Override
                     public void onNext(List<Address> addresses) {
-                        String city = addresses.get(0).getLocality();
-                        String country = addresses.get(0).getCountryName();
-                        if (city == null) {
-                            address.set(country);
-                        } else {
-                            address.set(addresses.get(0).getLocality()
-                                    + ", "
-                                    + addresses.get(0).getCountryName());
+                        String city = null, country = null;
+                        for (Address add : addresses) {
+                            if (add.getCountryName() != null && country == null)
+                                country = add.getCountryName();
+
+                            if (add.getLocality() != null) {
+                                city = add.getLocality();
+                                break;
+                            }
                         }
+                        address.set(city == null ? country : city + ", " + country);
+                        clickEnable.set(true);
                     }
 
                     @Override
@@ -154,16 +163,12 @@ public class LocationViewModel extends BaseViewModel<MainActivityRouter> {
     }
 
     private void insertRequest() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                insertRequestUseCase
-                        .insert(new WeatherRequest(latitude,
-                                longitude,
-                                address.get(),
-                                weather.get(),
-                                dateFormat.format(new Date())));
-            }
-        }).start();
+        insertRequestUseCase
+                .insert(new WeatherRequest(latitude,
+                        longitude,
+                        address.get(),
+                        weather.get(),
+                        dateFormat.format(new Date())));
+
     }
 }

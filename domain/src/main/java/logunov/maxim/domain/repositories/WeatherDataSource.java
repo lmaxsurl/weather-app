@@ -14,4 +14,6 @@ public interface WeatherDataSource {
 
     void addRequest(WeatherRequest request);
 
+    void deleteRequest(WeatherRequest request);
+
 }

@@ -75,9 +75,10 @@ public class WeatherRequest implements DomainModel {
         return date +
                 '\n' +
                 address +
-                " (" +
+                '\n' +
+                "(" +
                 latitude +
-                " , " +
+                ", " +
                 longitude +
                 ')';
     }

@@ -19,6 +19,7 @@ public abstract class BaseRecyclerViewAdapter<
     private List<Entity> items = new ArrayList<>();
     private boolean isItemClickedEnabled = true;
     private PublishSubject<ClickedItemModel> itemClickSubject = PublishSubject.create();
+    private PublishSubject<ClickedItemModel> itemLongClickSubject = PublishSubject.create();
 
     @Override
     public void onBindViewHolder(@NonNull BaseItemViewHolder<Entity, VM, ?> holder, int position) {
@@ -82,6 +83,15 @@ public abstract class BaseRecyclerViewAdapter<
                     holder.getViewModel().onItemClick();
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    int position = holder.getAdapterPosition();
+                    itemLongClickSubject.onNext(new ClickedItemModel(items.get(position), position));
+                    return true;
+                }
+            });
         }
     }
 
@@ -99,5 +109,9 @@ public abstract class BaseRecyclerViewAdapter<
 
     public Observable<ClickedItemModel> observeItemClick(){
         return itemClickSubject;
+    }
+
+    public Observable<ClickedItemModel> observeLongItemClick(){
+        return itemLongClickSubject;
     }
 }

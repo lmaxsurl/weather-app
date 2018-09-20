@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.functions.Consumer;
+import logunov.maxim.domain.entity.Weather;
+import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.weatherapp.R;
 import logunov.maxim.weatherapp.databinding.ActivityMainBinding;
 import logunov.maxim.weatherapp.presentation.base.BaseMvvmActivity;
@@ -48,10 +50,20 @@ public class MainActivity extends BaseMvvmActivity<
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        viewModel.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        if(getSupportFragmentManager().getPrimaryNavigationFragment() == null)
+        if (getSupportFragmentManager().getPrimaryNavigationFragment() == null)
             viewModel.showLocationFragment();
+    }
+
+    public void deleteRequest(WeatherRequest request){
+        viewModel.deleteRequest(request);
     }
 
     private void checkPermissions() {
@@ -66,8 +78,9 @@ public class MainActivity extends BaseMvvmActivity<
                     .subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(Boolean aBoolean) {
-                            viewModel.getData();
-                            Toast.makeText(MainActivity.this, "DONE!", Toast.LENGTH_SHORT).show();
+                            if (aBoolean) {
+                                viewModel.getData();
+                            }
                         }
                     });
         }
