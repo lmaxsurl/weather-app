@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.ncapdevi.fragnav.FragNavController;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.functions.Consumer;
@@ -40,49 +41,31 @@ public class MainActivity extends BaseMvvmActivity<
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        router.setBuilder(new FragNavController.Builder(savedInstanceState,
+                getSupportFragmentManager(), R.id.container));
         init();
     }
 
     private void init() {
         binding.navigation
-                .setOnNavigationItemSelectedListener(viewModel.onNavigationItemSelectedListener);
+                .setOnNavigationItemSelectedListener(router.onNavigationItemSelectedListener);
         checkPermissions();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        viewModel.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (getSupportFragmentManager().getPrimaryNavigationFragment() == null)
-            viewModel.showLocationFragment();
-    }
-
-    public void deleteRequest(WeatherRequest request){
-        viewModel.deleteRequest(request);
     }
 
     private void checkPermissions() {
         RxPermissions rxPermissions = new RxPermissions(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+        if (isGranted()) {
             rxPermissions
                     .request(Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(Boolean aBoolean) {
-                            if (aBoolean) {
-                                viewModel.getData();
-                            }
-                        }
-                    });
+                    .subscribe();
         }
+    }
+
+    private boolean isGranted(){
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED;
     }
 }

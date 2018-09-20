@@ -40,6 +40,9 @@ ext{
     //Recycle
     recycleVersion = '27.1.1'
 
+    //FragmentNavigation
+    fragmentNavigationVersion = '2.4.0'
+
     //Design
     designVersion = '27.1.1'
 

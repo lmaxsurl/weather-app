@@ -2,7 +2,10 @@ package logunov.maxim.weatherapp.presentation.screens.main;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -16,46 +19,8 @@ import logunov.maxim.weatherapp.presentation.screens.main.fragments.LocationFrag
 
 public class MainActivityViewModel extends BaseViewModel<MainActivityRouter> {
 
-    private final LocationFragment locationFragment = new LocationFragment();
-    private final HistoryFragment historyFragment = new HistoryFragment();
-
-    public BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.navigation_home:
-                            router.replaceFragment(locationFragment);
-                            return true;
-                        case R.id.navigation_history:
-                            router.replaceFragment(historyFragment);
-                            return true;
-                    }
-                    return false;
-                }
-            };
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        locationFragment.setRouter(router);
-        historyFragment.setRouter(router);
-    }
-
     @Override
     protected void runInject() {
         App.getAppComponent().runInject(this);
-    }
-
-    public void getData() {
-        locationFragment.getData();
-    }
-
-    public void showLocationFragment() {
-        router.replaceFragment(locationFragment);
-    }
-
-    public void deleteRequest(WeatherRequest request){
-        historyFragment.deleteRequest(request);
     }
 }
