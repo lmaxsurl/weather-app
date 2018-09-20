@@ -3,6 +3,7 @@ package logunov.maxim.domain.usecases;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import logunov.maxim.domain.entity.Weather;
 import logunov.maxim.domain.executors.PostExecutionThread;
 import logunov.maxim.domain.repositories.WeatherRepository;
 
@@ -17,9 +18,9 @@ public class GetWeatherUseCase extends BaseUseCase {
         this.weatherRepository = weatherRepository;
     }
 
-    public Observable<String> getWeather(String postalCode, String countryCode){
+    public Observable<Weather> getWeather(double latitude, double longitude){
         return weatherRepository
-                .getWeather(postalCode, countryCode)
+                .getWeather(latitude, longitude)
                 .subscribeOn(executionThread)
                 .observeOn(postExecutionThread);
     }

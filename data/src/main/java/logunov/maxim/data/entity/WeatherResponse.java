@@ -12,9 +12,6 @@ public class WeatherResponse implements DataModel {
     @SerializedName("wind")
     private WindResponse wind;
 
-    @SerializedName("description")
-    private String description;
-
     public WeatherDataResponse getMain() {
         return main;
     }
@@ -23,11 +20,4 @@ public class WeatherResponse implements DataModel {
         return wind;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

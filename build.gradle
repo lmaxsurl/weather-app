@@ -59,6 +59,9 @@ ext{
     //Arch
     archVersion = '1.1.1'
 
+    //Database
+    roomVersion = '1.1.1'
+
     //Binding
     bindingVersion = '3.0.0'
 

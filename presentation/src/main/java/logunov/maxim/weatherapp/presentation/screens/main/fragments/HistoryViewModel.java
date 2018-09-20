@@ -7,9 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import logunov.maxim.domain.entity.Weather;
 import logunov.maxim.domain.entity.WeatherRequest;
+import logunov.maxim.domain.usecases.GetRequestsUseCase;
+import logunov.maxim.domain.usecases.InsertRequestUseCase;
 import logunov.maxim.weatherapp.app.App;
 import logunov.maxim.weatherapp.presentation.base.BaseViewModel;
 import logunov.maxim.weatherapp.presentation.recycler.ClickedItemModel;
@@ -19,6 +24,12 @@ import logunov.maxim.weatherapp.presentation.screens.main.recycler.RequestItemAd
 public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
 
     public RequestItemAdapter adapter = new RequestItemAdapter();
+
+    @Inject
+    GetRequestsUseCase getRequestsUseCase;
+
+    @Inject
+    InsertRequestUseCase insertRequestUseCase;
 
     public HistoryViewModel() {
         getData();
@@ -30,12 +41,31 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
     }
 
     private void getData() {
-        List<WeatherRequest> data = new ArrayList<>();
-        data.add(new WeatherRequest(53, 24, "Minsk", "+24", new Date()));
-        data.add(new WeatherRequest(25, 17, "NY", "+24", new Date()));
-        data.add(new WeatherRequest(16, -9, "Sydney", "+24", new Date()));
-        data.add(new WeatherRequest(-212, 120, "Minsk", "+24", new Date()));
-        data.add(new WeatherRequest(32, 54, "Minsk", "+24", new Date()));
-        adapter.setItems(data);
+
+        getRequestsUseCase
+                .getRequests()
+                .subscribe(new Observer<List<WeatherRequest>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        getCompositeDisposable().add(d);
+                    }
+
+                    @Override
+                    public void onNext(List<WeatherRequest> weatherRequests) {
+                        adapter.setItems(weatherRequests);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        WeatherRequest weatherRequest = new WeatherRequest(0.0,
+                                0.0, "", e.getMessage(), "!");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 }

@@ -11,13 +11,13 @@ import logunov.maxim.data.entity.WeatherDataResponse;
 import logunov.maxim.data.entity.WeatherResponse;
 import logunov.maxim.data.entity.WindResponse;
 import logunov.maxim.data.net.WeatherService;
+import logunov.maxim.domain.entity.Weather;
 import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.domain.repositories.WeatherRepository;
 
 public class WeatherRepositoryImpl implements WeatherRepository {
 
     private WeatherService weatherRestService;
-    private final double FAHRENHEIT_DEGREE = 273.15;
 
     @Inject
     public WeatherRepositoryImpl(WeatherService weatherRestService) {
@@ -25,52 +25,24 @@ public class WeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public Observable<String> getWeather(String postalCode, String countryCode) {
-        return weatherRestService.getWeather(postalCode, countryCode)
-                .map(new Function<WeatherResponse, String>() {
+    public Observable<Weather> getWeather(double latitude, double longitude) {
+        return weatherRestService
+                .getWeather(latitude, longitude)
+                .map(new Function<WeatherResponse, Weather>() {
                     @Override
-                    public String apply(WeatherResponse weatherResponse) {
+                    public Weather apply(WeatherResponse weatherResponse) {
                         return mapWeatherResponse(weatherResponse);
                     }
                 });
     }
 
-    @Override
-    public Observable<List<WeatherRequest>> getRequests() {
-        return null;
-    }
-
-    @Override
-    public Completable addRequest(WeatherRequest weatherRequest) {
-        return null;
-    }
-
-    private String mapWeatherResponse(WeatherResponse weatherResponse){
-        StringBuilder weather = new StringBuilder("");
-        WeatherDataResponse weatherDataResponse = weatherResponse.getMain();
-        weather.append("Temp: ")
-                .append(weatherDataResponse.getTemp() - FAHRENHEIT_DEGREE)
-                .append('\n')
-                .append("Max/min temp: ")
-                .append(weatherDataResponse.getMaxTemp() - FAHRENHEIT_DEGREE)
-                .append('/')
-                .append(weatherDataResponse.getMinTemp() - FAHRENHEIT_DEGREE)
-                .append('\n')
-                .append("Description: ")
-                .append(weatherResponse.getDescription())
-                .append('\n')
-                .append("Humidity: ")
-                .append(weatherDataResponse.getHumidity())
-                .append('\n')
-                .append("Pressure: ")
-                .append(weatherDataResponse.getPressure())
-                .append('\n');
-        WindResponse windResponse = weatherResponse.getWind();
-        weather.append("Wind speed: ")
-                .append(windResponse.getSpeed())
-                .append('\n')
-                .append("Wind degrees: ")
-                .append(windResponse.getDegrees());
-        return weather.toString();
+    private Weather mapWeatherResponse(WeatherResponse weatherResponse){
+        Weather weather = new Weather();
+        weather.setTemperature(weatherResponse.getMain().getTemp());
+        weather.setHumidity(weatherResponse.getMain().getHumidity());
+        weather.setPressure(weatherResponse.getMain().getPressure());
+        weather.setWindSpeed(weatherResponse.getWind().getSpeed());
+        weather.setWindDegrees(weatherResponse.getWind().getDegrees());
+        return weather;
     }
 }

@@ -14,6 +14,7 @@ import io.reactivex.Observable;
 import logunov.maxim.data.BuildConfig;
 import logunov.maxim.data.entity.HttpError;
 import logunov.maxim.data.entity.WeatherResponse;
+import logunov.maxim.domain.entity.Weather;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -29,7 +30,7 @@ public class WeatherService {
     private static final String WEATHER_API_KEY="a6b12652f0cdee1b911329f9c42cee2b";
 
     @Inject
-    public WeatherService(Context context) {
+    public WeatherService() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -56,9 +57,9 @@ public class WeatherService {
                 .create(WeatherApi.class);
     }
 
-    public Observable<WeatherResponse> getWeather(String postalCode, String countryCode) {
+    public Observable<WeatherResponse> getWeather(double latitude, double longitude) {
         return weatherRestApi
-                .getWeather(postalCode + ',' + countryCode, WEATHER_API_KEY);
+                .getWeather(latitude, longitude, WEATHER_API_KEY);
     }
 
 
