@@ -58,7 +58,6 @@ ext{
     reactiveLocationVersion = '2.1'
     gsmVersion = '15.0.1'
 
-
     //Arch
     archVersion = '1.1.1'
 
