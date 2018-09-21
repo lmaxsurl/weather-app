@@ -3,7 +3,7 @@ package logunov.maxim.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WindResponse implements DataModel {
+public class WindData implements DataModel {
 
     @SerializedName("speed")
     private double speed;

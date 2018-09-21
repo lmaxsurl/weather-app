@@ -1,24 +1,16 @@
 package logunov.maxim.weatherapp.presentation.screens.main.fragments;
 
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import logunov.maxim.domain.entity.Weather;
 import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.domain.usecases.DeleteRequestUseCase;
 import logunov.maxim.domain.usecases.GetRequestsUseCase;
-import logunov.maxim.domain.usecases.InsertRequestUseCase;
+import logunov.maxim.domain.usecases.AddRequestUseCase;
 import logunov.maxim.weatherapp.app.App;
 import logunov.maxim.weatherapp.presentation.base.BaseViewModel;
 import logunov.maxim.weatherapp.presentation.recycler.ClickedItemModel;
@@ -33,10 +25,33 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
     public GetRequestsUseCase getRequestsUseCase;
 
     @Inject
-    public InsertRequestUseCase insertRequestUseCase;
+    public AddRequestUseCase insertRequestUseCase;
 
     @Inject
     public DeleteRequestUseCase deleteRequestUseCase;
+
+    private Consumer<List<WeatherRequest>> doOnNext = new Consumer<List<WeatherRequest>>() {
+        @Override
+        public void accept(List<WeatherRequest> weatherRequests) throws Exception {
+            adapter.setItems(weatherRequests);
+        }
+    };
+
+    private Consumer<ClickedItemModel> doOnClick = new Consumer<ClickedItemModel>() {
+        @Override
+        public void accept(ClickedItemModel clickedItemModel) {
+            WeatherRequest weatherRequest =
+                    (WeatherRequest) clickedItemModel.getEntity();
+            router.showDialog(weatherRequest.getWeather());
+        }
+    };
+
+    private Consumer<ClickedItemModel> doOnLongClick = new Consumer<ClickedItemModel>() {
+        @Override
+        public void accept(ClickedItemModel clickedItemModel) {
+            router.showDeleteDialog((WeatherRequest) clickedItemModel.getEntity());
+        }
+    };
 
     public HistoryViewModel() {
         getData();
@@ -52,54 +67,22 @@ public class HistoryViewModel extends BaseViewModel<MainActivityRouter> {
         getCompositeDisposable()
                 .add(adapter
                         .observeItemClick()
-                        .subscribe(new Consumer<ClickedItemModel>() {
-                            @Override
-                            public void accept(ClickedItemModel clickedItemModel) {
-                                WeatherRequest weatherRequest =
-                                        (WeatherRequest) clickedItemModel.getEntity();
-                                router.showDialog(weatherRequest.getWeather());
-                            }
-                        }));
+                        .subscribe(doOnClick, doOnError));
         getCompositeDisposable()
                 .add(adapter
                         .observeLongItemClick()
-                        .subscribe(new Consumer<ClickedItemModel>() {
-                            @Override
-                            public void accept(ClickedItemModel clickedItemModel) {
-                                router.showDeleteDialog((WeatherRequest) clickedItemModel.getEntity());
-                            }
-                        }));
+                        .subscribe(doOnLongClick, doOnError));
     }
 
     private void getData() {
-        getRequestsUseCase
-                .getRequests()
-                .subscribe(new Observer<List<WeatherRequest>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        getCompositeDisposable().add(d);
-                    }
-
-                    @Override
-                    public void onNext(List<WeatherRequest> weatherRequests) {
-                        adapter.setItems(weatherRequests);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        WeatherRequest weatherRequest = new WeatherRequest(0.0,
-                                0.0, "", e.getMessage(), "!");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        getCompositeDisposable().add(
+                getRequestsUseCase
+                        .getRequests()
+                        .subscribe(doOnNext, doOnError));
 
     }
 
-    public void deleteRequest(WeatherRequest request){
+    public void deleteRequest(WeatherRequest request) {
         deleteRequestUseCase.delete(request);
         adapter.removeItem(request);
     }

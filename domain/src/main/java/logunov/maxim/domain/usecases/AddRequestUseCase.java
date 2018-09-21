@@ -8,26 +8,22 @@ import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.domain.executors.PostExecutionThread;
 import logunov.maxim.domain.repositories.WeatherDataSource;
 
-public class InsertRequestUseCase extends BaseUseCase {
+public class AddRequestUseCase extends BaseUseCase {
 
     private WeatherDataSource weatherDataSource;
 
     @Inject
-    public InsertRequestUseCase(PostExecutionThread postExecutionThread, WeatherDataSource weatherDataSource) {
-        super(postExecutionThread);
+    public AddRequestUseCase(WeatherDataSource weatherDataSource) {
         this.weatherDataSource = weatherDataSource;
     }
 
-    public void insert(final WeatherRequest request) {
+    public void add(final WeatherRequest request) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 weatherDataSource
                         .addRequest(request);
             }
         }).start();
     }
-
-
 }

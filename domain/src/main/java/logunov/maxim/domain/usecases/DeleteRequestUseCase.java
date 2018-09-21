@@ -11,8 +11,7 @@ public class DeleteRequestUseCase extends BaseUseCase {
     private WeatherDataSource weatherDataSource;
 
     @Inject
-    public DeleteRequestUseCase(PostExecutionThread postExecutionThread, WeatherDataSource weatherDataSource) {
-        super(postExecutionThread);
+    public DeleteRequestUseCase(WeatherDataSource weatherDataSource) {
         this.weatherDataSource = weatherDataSource;
     }
 

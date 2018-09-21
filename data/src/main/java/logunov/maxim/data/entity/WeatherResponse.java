@@ -2,21 +2,19 @@ package logunov.maxim.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class WeatherResponse implements DataModel {
 
     @SerializedName("main")
-    private WeatherDataResponse main;
+    private MainData main;
 
     @SerializedName("wind")
-    private WindResponse wind;
+    private WindData wind;
 
-    public WeatherDataResponse getMain() {
+    public MainData getMain() {
         return main;
     }
 
-    public WindResponse getWind() {
+    public WindData getWind() {
         return wind;
     }
 

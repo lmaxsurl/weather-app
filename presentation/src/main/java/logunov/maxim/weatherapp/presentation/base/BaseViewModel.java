@@ -1,8 +1,10 @@
 package logunov.maxim.weatherapp.presentation.base;
 
 import android.arch.lifecycle.ViewModel;
+import android.databinding.ObservableBoolean;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public abstract class BaseViewModel<R extends BaseRouter> extends ViewModel {
 
@@ -11,6 +13,8 @@ public abstract class BaseViewModel<R extends BaseRouter> extends ViewModel {
     protected R router;
 
     protected abstract void runInject();
+
+    public ObservableBoolean clickEnable = new ObservableBoolean(true);
 
     public BaseViewModel() {
         runInject();
@@ -37,6 +41,15 @@ public abstract class BaseViewModel<R extends BaseRouter> extends ViewModel {
         if (compositeDisposable != null)
             compositeDisposable.clear();
     }
+
+    protected Consumer<Throwable> doOnError = new Consumer<Throwable>(){
+
+        @Override
+        public void accept(Throwable throwable) {
+            router.showError(throwable);
+            clickEnable.set(true);
+        }
+    };
 
     public void onStart(){
 

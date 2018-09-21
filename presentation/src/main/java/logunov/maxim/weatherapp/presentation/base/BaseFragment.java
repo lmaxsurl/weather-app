@@ -12,7 +12,6 @@ public abstract class BaseFragment extends Fragment{
         if(compositeDisposable == null) {
             compositeDisposable = new CompositeDisposable();
         }
-
         return compositeDisposable;
     }
 

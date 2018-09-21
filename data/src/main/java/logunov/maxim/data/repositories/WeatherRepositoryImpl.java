@@ -1,18 +1,12 @@
 package logunov.maxim.data.repositories;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
-import logunov.maxim.data.entity.WeatherDataResponse;
 import logunov.maxim.data.entity.WeatherResponse;
-import logunov.maxim.data.entity.WindResponse;
 import logunov.maxim.data.net.WeatherService;
 import logunov.maxim.domain.entity.Weather;
-import logunov.maxim.domain.entity.WeatherRequest;
 import logunov.maxim.domain.repositories.WeatherRepository;
 
 public class WeatherRepositoryImpl implements WeatherRepository {

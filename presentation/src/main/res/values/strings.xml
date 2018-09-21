@@ -3,5 +3,14 @@
     <string name="title_home">Home</string>
     <string name="title_history">History</string>
     <string name="title_notifications">Notifications</string>
-    <string name="show_weather">update weather</string>
+    <string name="update_weather">update weather</string>
+    <string name="about_permission">If you don\'t give permission, the app will not work!</string>
+    <string name="error_internet_not_available">Internet isn\'t available</string>
+    <string name="error_server_not_available">Server isn\'t available\nCheck your internet connection</string>
+    <string name="error_server">Server error\nPlease, try again later</string>
+    <string name="error">Unexpected error\nPlease, try again later</string>
+    <string name="gps_not_available">GPS is disabled\nPlease, turn it on and try again</string>
+    <string name="no_gps_permission">You haven\'t given permission to use GPS</string>
+    <string name="something_wrong">Something went wrong\nPlease, try again later</string>
+    <string name="delete_request">Delete this request?</string>
 </resources>

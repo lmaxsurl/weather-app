@@ -26,6 +26,7 @@ public class WeatherService {
     private WeatherApi weatherRestApi;
     private Gson gson;
     private final int TIMEOUT = 10;
+    private ErrorParserTransformer errorParserTransformer;
     private static final String WEATHER_REQUEST_URL = "http://api.openweathermap.org/data/2.5/";
     private static final String WEATHER_API_KEY="a6b12652f0cdee1b911329f9c42cee2b";
 
@@ -55,11 +56,15 @@ public class WeatherService {
                 .client(okHttpClientBuilder.build())
                 .build()
                 .create(WeatherApi.class);
+
+        errorParserTransformer = new ErrorParserTransformer(gson);
     }
 
     public Observable<WeatherResponse> getWeather(double latitude, double longitude) {
         return weatherRestApi
-                .getWeather(latitude, longitude, WEATHER_API_KEY);
+                .getWeather(latitude, longitude, WEATHER_API_KEY)
+                .take(1)
+                .compose(errorParserTransformer.<WeatherResponse, Throwable>parseHttpError());
     }
 
 

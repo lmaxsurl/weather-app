@@ -1,6 +1,6 @@
 package logunov.maxim.domain.entity;
 
-public class Weather {
+public class Weather implements DomainModel {
 
     public static final double FAHRENHEIT_DEGREE = 273.15;
 

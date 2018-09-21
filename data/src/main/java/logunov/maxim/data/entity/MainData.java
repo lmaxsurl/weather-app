@@ -1,9 +1,8 @@
 package logunov.maxim.data.entity;
 
-
 import com.google.gson.annotations.SerializedName;
 
-public class WeatherDataResponse implements DataModel {
+public class MainData implements DataModel {
 
     @SerializedName("temp")
     private double temp;

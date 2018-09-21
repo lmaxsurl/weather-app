@@ -25,8 +25,6 @@ public class LocationFragment extends BaseMvvmFragment<
         LocationFragmentBinding,
         MainActivityRouter> {
 
-    private static final String TAG = "FFF";
-
     @Override
     protected LocationViewModel provideViewModel() {
         return ViewModelProviders.of(this).get(LocationViewModel.class);
@@ -37,8 +35,31 @@ public class LocationFragment extends BaseMvvmFragment<
         return R.layout.location_fragment;
     }
 
-    public void getData(){
-        viewModel.getData();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkPermissions();
     }
 
+    private void checkPermissions() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        if (!isGranted()) {
+            getCompositeDisposable().add(rxPermissions
+                    .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) {
+                            viewModel.getData();
+                        }
+                    }));
+        }
+    }
+
+    private boolean isGranted(){
+        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+    }
 }

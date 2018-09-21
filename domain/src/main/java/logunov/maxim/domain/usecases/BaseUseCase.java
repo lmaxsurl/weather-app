@@ -10,6 +10,10 @@ public abstract class BaseUseCase {
     protected Scheduler executionThread;
     protected Scheduler postExecutionThread;
 
+    public BaseUseCase(){
+
+    }
+
     public BaseUseCase(Scheduler executionThread, Scheduler postExecutionThread) {
         this.executionThread = executionThread;
         this.postExecutionThread = postExecutionThread;

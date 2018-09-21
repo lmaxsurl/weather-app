@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -61,17 +62,9 @@ public class MainActivityRouter extends BaseRouter<MainActivity> {
         historyFragment.setRouter(this);
     }
 
-    public void showDialog(String message){
-        new AlertDialog.Builder(activity)
-                .setMessage(message)
-                .setPositiveButton("ОК", null)
-                .create()
-                .show();
-    }
-
     public void showDeleteDialog(final WeatherRequest weatherRequest){
         new AlertDialog.Builder(activity)
-                .setMessage("Delete this request?")
+                .setMessage(R.string.delete_request)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -83,7 +76,9 @@ public class MainActivityRouter extends BaseRouter<MainActivity> {
                 .show();
     }
 
-    public void setBuilder(FragNavController.Builder builder){
+    public void createBuilder(Bundle savedInstanceState){
+        FragNavController.Builder builder = new FragNavController.Builder(
+                savedInstanceState, activity.getSupportFragmentManager(), R.id.container);
         fragments.add(locationFragment);
         fragments.add(historyFragment);
         builder.rootFragments(fragments);
